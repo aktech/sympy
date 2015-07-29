@@ -10,9 +10,11 @@ from sympy.functions.elementary.exponential import (LambertW, exp, log)
 from sympy.functions.elementary.miscellaneous import root
 from sympy.polys.polytools import Poly, factor
 from sympy.core.function import _mexpand
+from sympy.sets.sets import Intersection, FiniteSet
 from sympy.simplify.simplify import separatevars
 from sympy.simplify.radsimp import collect
 from sympy.solvers.solvers import solve, _invert
+from sympy.solvers.solveset import solveset, invert_real
 
 
 def _filtered_gens(poly, symbol):
@@ -153,7 +155,17 @@ def _lambert(eq, x):
             continue
         rhs = -c/b + (a/d)*l
 
-        solns = solve(X1 - u, x)
+        try:
+            solns = solveset(X1 - u, x)
+        except NotImplementedError:
+            solns = [LambertW(exp(u))]
+
+        if isinstance(solns, Intersection) and S.Reals in solns.args:
+            solns = list(solns.args[1])
+
+        if isinstance(solns, FiniteSet):
+            solns = list(solns)
+
         for i, tmp in enumerate(solns):
             solns[i] = tmp.subs(u, rhs)
             sol.append(solns[i])
@@ -209,7 +221,10 @@ def _solve_lambert(f, symbol, gens):
     lhs = factor(lhs, deep=True)
     # make sure we are inverted as completely as possible
     r = Dummy()
-    i, lhs = _invert(lhs - r, symbol)
+
+    lhs, rh = invert_real(lhs - r, 0, symbol)
+    i = rh.args[0]
+
     rhs = i.xreplace({r: rhs})
 
     # For the first ones:

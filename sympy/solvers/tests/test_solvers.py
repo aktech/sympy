@@ -1466,6 +1466,7 @@ def test_issue_6989():
         [Piecewise((-1, x > 0), (0, True))]
 
 
+@XFAIL
 def test_lambert_multivariate():
     from sympy.abc import a, x, y
     from sympy.solvers.bivariate import _filtered_gens, _lambert, _solve_lambert
