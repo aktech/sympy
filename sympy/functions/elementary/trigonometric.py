@@ -846,7 +846,7 @@ class tan(TrigonometricFunction):
     >>> from sympy import tan, pi
     >>> from sympy.abc import x
     >>> tan(x**2).diff(x)
-    2*x*(tan(x**2)**2 + 1)
+    2*x*sec(x**2)**2
     >>> tan(1).diff(x)
     0
     >>> tan(pi/8).expand()
