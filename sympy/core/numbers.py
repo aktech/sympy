@@ -1361,6 +1361,7 @@ class IntegerDivision(Number):
     Examples
     ========
 
+    >>> from sympy import IntegerDivision
     >>> from sympy import Rational, nsimplify, S, pi
     >>> Rational(3)
     3
@@ -1441,7 +1442,7 @@ class IntegerDivision(Number):
     sympify, sympy.simplify.simplify.nsimplify
     """
     is_real = True
-    is_integer = False
+    is_integer = True
     is_rational = True
     is_number = True
 
